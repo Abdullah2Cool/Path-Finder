@@ -17,6 +17,7 @@ public class Cell {
     float nH, nG, nF;
     Cell ParentCell;
     boolean bHighlight = false;
+    boolean bChecked = false;
 
     public Cell(float fX, float fY, float fLength, boolean bObstacle) {
         this.fX = fX;
@@ -33,19 +34,24 @@ public class Cell {
     public void show() {
         if (bTarget) {
             shape.begin(ShapeRenderer.ShapeType.Filled);
-            shape.setColor(Color.BLUE);
+            shape.setColor(Color.WHITE);
             shape.rect(fX, fY, fLength, fLength);
             shape.end();
         } else if (bObstacle) {
             shape.begin(ShapeRenderer.ShapeType.Filled);
-            shape.setColor(Color.RED);
+            shape.setColor(Color.BLACK);
             shape.rect(fX, fY, fLength, fLength);
             shape.end();
         } else {
             nF = nH + nG;
             if (bHighlight) {
                 shape.begin(ShapeRenderer.ShapeType.Filled);
-                shape.setColor(Color.FOREST);
+                shape.setColor(Color.GREEN);
+                shape.rect(fX, fY, fLength, fLength);
+                shape.end();
+            } else if (bChecked) {
+                shape.begin(ShapeRenderer.ShapeType.Filled);
+                shape.setColor(Color.SLATE);
                 shape.rect(fX, fY, fLength, fLength);
                 shape.end();
             } else {
@@ -77,8 +83,8 @@ public class Cell {
         return fY;
     }
 
-    public int getnF () {
-       return (int)nF;
+    public int getnF() {
+        return (int) nF;
     }
 
     public void setParentCell(Cell cell) {
