@@ -25,20 +25,20 @@ public class Main extends ApplicationAdapter implements InputProcessor {
     int nHMoves, nVMoves;
     Random random;
     boolean bPathFound = false;
-    boolean bSideWaysOnly = false;
+    boolean bSideWaysOnly = true;
 
     @Override
     public void create() {
-        GridSize = 10;
+        GridSize = 15;
         scrWidth = Gdx.graphics.getWidth();
         scrHeight = Gdx.graphics.getHeight();
-        fRows = scrWidth / GridSize;
-        fCols = scrHeight / GridSize;
+        fRows = (int) (scrWidth / GridSize);
+        fCols = (int) (scrHeight / GridSize);
         Grid = new Cell[(int) fRows][(int) fCols];
         random = new Random();
         for (int x = 0; x < fRows; x++) {
             for (int y = 0; y < fCols; y++) {
-                if (random.nextInt(10) + 1 <= 4) {
+                if (random.nextInt(10) + 1 <= 3) {
                     Grid[x][y] = new Cell(x * GridSize, y * GridSize, GridSize, true);
                 } else {
                     Grid[x][y] = new Cell(x * GridSize, y * GridSize, GridSize, false);
@@ -118,7 +118,9 @@ public class Main extends ApplicationAdapter implements InputProcessor {
             Collections.sort(Path, Cell.CellF);
             Path.get(0).bHighlight = true;
             for (int i = 1; i < Path.size(); i++) {
-                Path.get(i).bHighlight = false;
+                if (Path.get(i).bHighlight == true) {
+                    Path.get(i).bHighlight = false;
+                }
             }
             for (int x = 0; x < fRows; x++) {
                 for (int y = 0; y < fCols; y++) {

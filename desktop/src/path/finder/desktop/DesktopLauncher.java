@@ -7,10 +7,10 @@ import path.finder.Main;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 1000;
-		config.height = 800;
-//        config.backgroundFPS = 2;
-//        config.foregroundFPS = 2;
+		config.width = 1920;
+		config.height = 1080;
+//        config.backgroundFPS = 1;
+//        config.foregroundFPS = 1;
 		new LwjglApplication(new Main(), config);
 	}
 }

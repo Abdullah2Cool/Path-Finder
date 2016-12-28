@@ -83,6 +83,13 @@ public class Cell {
         return fY;
     }
 
+    public void setX (float fX) {
+        this.fX = fX;
+    }
+    public void setY (float fY) {
+        this.fY = fY;
+    }
+
     public int getnF() {
         return (int) nF;
     }
