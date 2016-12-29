@@ -3,8 +3,6 @@ package path.finder;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import java.util.Comparator;
-
 /**
  * Created by hafiz on 12/26/2016.
  */
@@ -13,11 +11,12 @@ public class Cell {
     private float fX, fY, fLength;
     ShapeRenderer shape;
     boolean bObstacle;
-    boolean bTarget;
     float nH, nG, nF;
     Cell ParentCell;
     boolean bHighlight = false;
     boolean bChecked = false;
+    boolean bStartingCell = false;
+    boolean bTarget = false;
 
     public Cell(float fX, float fY, float fLength, boolean bObstacle) {
         this.fX = fX;
@@ -39,7 +38,12 @@ public class Cell {
             shape.end();
         } else if (bObstacle) {
             shape.begin(ShapeRenderer.ShapeType.Filled);
-            shape.setColor(Color.BLACK);
+            shape.setColor(Color.RED);
+            shape.rect(fX, fY, fLength, fLength);
+            shape.end();
+        } else if (bStartingCell) {
+            shape.begin(ShapeRenderer.ShapeType.Filled);
+            shape.setColor(Color.YELLOW);
             shape.rect(fX, fY, fLength, fLength);
             shape.end();
         } else {
@@ -51,29 +55,17 @@ public class Cell {
                 shape.end();
             } else if (bChecked) {
                 shape.begin(ShapeRenderer.ShapeType.Filled);
-                shape.setColor(Color.SLATE);
+                shape.setColor(Color.BLACK);
                 shape.rect(fX, fY, fLength, fLength);
                 shape.end();
             } else {
                 shape.begin(ShapeRenderer.ShapeType.Line);
-                shape.setColor(nH / 255 * 1.5f, nH / 255 * 1.5f, nH / 255 * 1.5f, 1f);
+                shape.setColor(Color.WHITE);
                 shape.rect(fX, fY, fLength, fLength);
                 shape.end();
             }
         }
     }
-
-    public static Comparator<Cell> CellF = new Comparator<Cell>() {
-
-        public int compare(Cell c1, Cell c2) {
-
-            int F1 = c1.getnF();
-            int F2 = c1.getnF();
-
-	   /*For ascending order*/
-            return F1 - F2;
-        }
-    };
 
     public float getX() {
         return fX;
@@ -83,10 +75,11 @@ public class Cell {
         return fY;
     }
 
-    public void setX (float fX) {
+    public void setX(float fX) {
         this.fX = fX;
     }
-    public void setY (float fY) {
+
+    public void setY(float fY) {
         this.fY = fY;
     }
 
