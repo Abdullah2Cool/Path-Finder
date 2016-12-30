@@ -21,7 +21,7 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void create() {
-        GridSize = 15;
+        GridSize = (int) (0.00002893518 * (Gdx.graphics.getWidth() * Gdx.graphics.getHeight()));
         scrWidth = Gdx.graphics.getWidth();
         scrHeight = Gdx.graphics.getHeight();
         fRows = (int) (scrWidth / GridSize);

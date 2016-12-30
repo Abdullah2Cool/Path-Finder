@@ -19,6 +19,7 @@ public class PathFinder {
     private ArrayList<Cell> Path = new ArrayList<>();
     private boolean bPathFound = false;
     private boolean bNoDiagonals;
+    private int CalculationsPerFrame = 1;
 
 
     public PathFinder(Cell TargetCell, Cell StartCell, Cell[][] Grid, boolean bNoDiagonals) {
@@ -32,18 +33,18 @@ public class PathFinder {
     }
 
     public void FindPath() {
-        //while (!bPathFound) {
         if (!bPathFound) {
-            Cell TempCell;
-            Collections.sort(OpenList, new DistanceComparator());
-            if (OpenList.size() > 0) {
-                TempCell = OpenList.get(0);
-                ClosedList.add(TempCell);
-                OpenList.remove(TempCell);
+            for (int i = 0; i < CalculationsPerFrame; i++) {
+                Cell TempCell;
+                Collections.sort(OpenList, new DistanceComparator());
+                if (OpenList.size() > 0) {
+                    TempCell = OpenList.get(0);
+                    ClosedList.add(TempCell);
+                    OpenList.remove(TempCell);
+                }
+                SetChildren(ClosedList.get(ClosedList.size() - 1));
             }
-            SetChildren(ClosedList.get(ClosedList.size() - 1));
         }
-//        }
         if (bPathFound) {
             HighlightPath();
         }
@@ -152,183 +153,5 @@ public class PathFinder {
                 }
             }
         }
-
-
-//        int x = (int) (ParentCell.getX() / GridSize);
-//        int y = (int) (ParentCell.getY() / GridSize);
-//        ClosedList.add(ParentCell);
-//        OpenList.remove(ParentCell);
-//        Cell ChildCell;
-//        if (y + 1 < fCols) {
-//            ChildCell = Grid[x][y + 1];
-//            if (ChildCell.bObstacle == false) {
-//                if (ChildCell.ParentCell == null) {
-//                    ChildCell.setParentCell(ParentCell); // Top
-//                    ChildCell.nG = ParentCell.nG + 10;
-//                    OpenList.add(ChildCell);
-//                    ChildCell.bChecked = true;
-//                } else if (OpenList.contains(ChildCell)) {
-//                    if (ParentCell.nG + 10 < ChildCell.nG) {
-//                        ChildCell.setParentCell(ParentCell);
-//                        ChildCell.nG = ParentCell.nG + 10;
-//                    }
-//                }
-//            }
-//            if (ChildCell == TargetCell) {
-//                System.out.println("Top : Found it");
-//                bPathFound = true;
-//                Path.add(ParentCell);
-//            }
-//        }
-//        if (x + 1 < fRows) {
-//            ChildCell = Grid[x + 1][y];
-//            if (ChildCell.bObstacle == false) {
-//                if (ChildCell.ParentCell == null) {
-//                    ChildCell.setParentCell(ParentCell); // Right
-//                    ChildCell.nG = ParentCell.nG + 10;
-//                    OpenList.add(ChildCell);
-//                    ChildCell.bChecked = true;
-//                } else if (OpenList.contains(ChildCell)) {
-//                    if (ParentCell.nG + 10 < ChildCell.nG) {
-//                        ChildCell.setParentCell(ParentCell);
-//                        ChildCell.nG = ParentCell.nG + 10;
-//                    }
-//                }
-//            }
-//            if (ChildCell == TargetCell) {
-//                System.out.println("Right : Found it");
-//                bPathFound = true;
-//                Path.add(ParentCell);
-//            }
-//        }
-//        if (y - 1 >= 0) {
-//            ChildCell = Grid[x][y - 1];
-//            if (ChildCell.bObstacle == false) {
-//                if (ChildCell.ParentCell == null) {
-//                    ChildCell.setParentCell(ParentCell); // Bottom
-//                    ChildCell.nG = ParentCell.nG + 10;
-//                    OpenList.add(ChildCell);
-//                    ChildCell.bChecked = true;
-//                } else if (OpenList.contains(ChildCell)) {
-//                    if (ParentCell.nG + 10 < ChildCell.nG) {
-//                        ChildCell.setParentCell(ParentCell);
-//                        ChildCell.nG = ParentCell.nG + 10;
-//                    }
-//                }
-//            }
-//            if (ChildCell == TargetCell) {
-//                System.out.println("Bottom : Found it");
-//                bPathFound = true;
-//                Path.add(ParentCell);
-//            }
-//        }
-//        if (x - 1 >= 0) {
-//            ChildCell = Grid[x - 1][y];
-//            if (ChildCell.bObstacle == false) {
-//                if (ChildCell.ParentCell == null) {
-//                    ChildCell.setParentCell(ParentCell); // Left
-//                    ChildCell.nG = ParentCell.nG + 10;
-//                    OpenList.add(ChildCell);
-//                    ChildCell.bChecked = true;
-//                } else if (OpenList.contains(ChildCell)) {
-//                    if (ParentCell.nG + 10 < ChildCell.nG) {
-//                        ChildCell.setParentCell(ParentCell);
-//                        ChildCell.nG = ParentCell.nG + 10;
-//                    }
-//                }
-//            }
-//            if (ChildCell == TargetCell) {
-//                System.out.println("Left : Found it");
-//                bPathFound = true;
-//                Path.add(ParentCell);
-//            }
-//        }
-//        if (!bNoDiagonals) {
-//            if (x + 1 < fRows && y + 1 < fCols) {
-//                ChildCell = Grid[x + 1][y + 1];
-//                if (ChildCell.bObstacle == false) {
-//                    if (ChildCell.ParentCell == null) {
-//                        ChildCell.setParentCell(ParentCell); // Top-Right
-//                        ChildCell.nG = ParentCell.nG + 14;
-//                        OpenList.add(ChildCell);
-//                        ChildCell.bChecked = true;
-//                    } else if (OpenList.contains(ChildCell)) {
-//                        if (ParentCell.nG + 14 < ChildCell.nG) {
-//                            ChildCell.setParentCell(ParentCell);
-//                            ChildCell.nG = ParentCell.nG + 14;
-//                        }
-//                    }
-//                }
-//                if (ChildCell == TargetCell) {
-//                    System.out.println("Top-Right : Found it");
-//                    bPathFound = true;
-//                    Path.add(ParentCell);
-//                }
-//            }
-//            if (x - 1 >= 0 && y + 1 < fCols) {
-//                ChildCell = Grid[x - 1][y + 1];
-//                if (ChildCell.bObstacle == false) {
-//                    if (ChildCell.ParentCell == null) {
-//                        ChildCell.setParentCell(ParentCell); // Top-Left
-//                        ChildCell.nG = ParentCell.nG + 14;
-//                        OpenList.add(ChildCell);
-//                        ChildCell.bChecked = true;
-//                    } else if (OpenList.contains(ChildCell)) {
-//                        if (ParentCell.nG + 14 < ChildCell.nG) {
-//                            ChildCell.setParentCell(ParentCell);
-//                            ChildCell.nG = ParentCell.nG + 14;
-//                        }
-//                    }
-//                }
-//                if (ChildCell == TargetCell) {
-//                    System.out.println("Top-Left : Found it");
-//                    bPathFound = true;
-//                    Path.add(ParentCell);
-//                }
-//            }
-//            if (x + 1 < fRows && y - 1 >= 0) {
-//                ChildCell = Grid[x + 1][y - 1];
-//                if (ChildCell.bObstacle == false) {
-//                    if (ChildCell.ParentCell == null) {
-//                        ChildCell.setParentCell(ParentCell); // Bottom-Right
-//                        ChildCell.nG = ParentCell.nG + 14;
-//                        OpenList.add(ChildCell);
-//                        ChildCell.bChecked = true;
-//                    } else if (OpenList.contains(ChildCell)) {
-//                        if (ParentCell.nG + 14 < ChildCell.nG) {
-//                            ChildCell.setParentCell(ParentCell);
-//                            ChildCell.nG = ParentCell.nG + 14;
-//                        }
-//                    }
-//                }
-//                if (ChildCell == TargetCell) {
-//                    System.out.println("Bottom-Right : Found it");
-//                    bPathFound = true;
-//                    Path.add(ParentCell);
-//                }
-//            }
-//
-//            if (x - 1 >= 0 && y - 1 >= 0) {
-//                ChildCell = Grid[x - 1][y - 1];
-//                if (ChildCell.bObstacle == false) {
-//                    if (ChildCell.ParentCell == null) {
-//                        ChildCell.setParentCell(ParentCell); // Bottom-Left
-//                        ChildCell.nG = ParentCell.nG + 14;
-//                        OpenList.add(ChildCell);
-//                        ChildCell.bChecked = true;
-//                    } else if (OpenList.contains(ChildCell)) {
-//                        if (ParentCell.nG + 14 < ChildCell.nG) {
-//                            ChildCell.setParentCell(ParentCell);
-//                            ChildCell.nG = ParentCell.nG + 14;
-//                        }
-//                    }
-//                }
-//                if (ChildCell.bTarget) {
-//                    System.out.println("Bottom-Left : Found it");
-//                    bPathFound = true;
-//                    Path.add(ParentCell);
-//                }
-//            }
-//        }
     }
 }
