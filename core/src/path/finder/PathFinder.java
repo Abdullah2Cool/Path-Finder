@@ -19,7 +19,8 @@ public class PathFinder {
     private ArrayList<Cell> Path = new ArrayList<>();
     private boolean bPathFound = false;
     private boolean bNoDiagonals;
-    private int CalculationsPerFrame = 1;
+    private int CalculationsPerFrame = 200;
+    private boolean bRunOnce = true;
 
 
     public PathFinder(Cell TargetCell, Cell StartCell, Cell[][] Grid, boolean bNoDiagonals) {
@@ -29,7 +30,6 @@ public class PathFinder {
         this.bNoDiagonals = bNoDiagonals;
         Calc_Heuristic();
         OpenList.add(StartCell);
-        SetChildren(StartCell);
     }
 
     public void FindPath() {
@@ -41,25 +41,50 @@ public class PathFinder {
                     TempCell = OpenList.get(0);
                     ClosedList.add(TempCell);
                     OpenList.remove(TempCell);
+                    SetChildren(ClosedList.get(ClosedList.size() - 1));
                 }
-                SetChildren(ClosedList.get(ClosedList.size() - 1));
             }
-        }
-        if (bPathFound) {
-            HighlightPath();
+        } else {
+            if (bRunOnce) {
+                HighlightPath();
+            }
         }
     }
 
     public void HighlightPath() {
-        Collections.sort(Path, new DistanceComparator()); // arrange the pats in ascending order
-        Path.get(0).bHighlight = true; // highlight the first cell of the shortest path
-        for (int x = 0; x < fRows; x++) {
-            for (int y = 0; y < fCols; y++) {
-                if (Grid[x][y].bHighlight == true && Grid[x][y].getParentCell() != StartCell) {
-                    Grid[x][y].getParentCell().bHighlight = true;
-                }
+//        Collections.sort(Path, new DistanceComparator()); // arrange the pats in ascending order
+//        Path.get(0).bHighlight = true; // highlight the first cell of the shortest path
+        Cell TempCell;
+        for (int i = 0; i < 5; i++) {
+            TempCell = Path.get(Path.size() - 1);
+            if (TempCell != StartCell) {
+                TempCell.bHighlight = true;
+                TempCell.getParentCell().bHighlight = true;
+                Path.add(TempCell.getParentCell());
+            } else {
+                bRunOnce = false;
+                break;
             }
         }
+//        for (int f = 0; f < CalculationsPerFrame; f++) {
+//            for (int i = 0; i < OpenList.size(); i++) {
+//                if (OpenList.get(i).bHighlight == true && OpenList.get(i).getParentCell() != StartCell) {
+//                    OpenList.get(i).getParentCell().bHighlight = true;
+//                }
+//            }
+//            for (int i = 0; i < ClosedList.size(); i++) {
+//                if (ClosedList.get(i).bHighlight == true && ClosedList.get(i).getParentCell() != StartCell) {
+//                    ClosedList.get(i).getParentCell().bHighlight = true;
+//                }
+//            }
+//        }
+//        for (int x = 0; x < fRows; x++) {
+//            for (int y = 0; y < fCols; y++) {
+//                if (Grid[x][y].bHighlight == true && Grid[x][y].getParentCell() != StartCell) {
+//                    Grid[x][y].getParentCell().bHighlight = true;
+//                }
+//            }
+//        }
     }
 
     public void Calc_Heuristic() {
@@ -113,7 +138,20 @@ public class PathFinder {
                 ChildCells[7] = Grid[x - 1][y - 1]; // bottom-left
             }
         }
+
         for (int i = 0; i < ChildCells.length; i++) {
+//            if (ChildCells[i].getX() == TargetCell.getX() && ChildCells[i].getY() == TargetCell.getY()) {
+            if (ChildCells[i] == TargetCell) {
+                System.out.println("Found");
+                System.out.println(ChildCells[i].getX());
+                System.out.println(ChildCells[i].getY());
+                System.out.println("Target");
+                System.out.println(TargetCell.getX());
+                System.out.println(TargetCell.getY());
+                System.out.println();
+                Path.add(ChildCells[i]);
+                bPathFound = true;
+            }
             if (ChildCells[i] != null) {
                 if (ChildCells[i].bObstacle == false) {
                     if (ChildCells[i].ParentCell == null) {
@@ -137,18 +175,6 @@ public class PathFinder {
                                 ChildCells[i].nG = ParentCell.nG + 14;
                             }
                         }
-                    }
-                    if (ChildCells[i].getX() == TargetCell.getX() && ChildCells[i].getY() == TargetCell.getY()) {
-                        System.out.println("Found");
-                        System.out.println(ChildCells[i].getX());
-                        System.out.println(ChildCells[i].getY());
-                        System.out.println("Target");
-                        System.out.println(TargetCell.getX());
-                        System.out.println(TargetCell.getY());
-                        System.out.println();
-//                        System.out.println("Path Found");
-                        bPathFound = true;
-                        Path.add(ParentCell);
                     }
                 }
             }

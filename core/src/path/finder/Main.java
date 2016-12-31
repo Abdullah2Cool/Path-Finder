@@ -3,6 +3,7 @@ package path.finder;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -18,16 +19,18 @@ public class Main extends ApplicationAdapter {
     Cell TempStartCell, TempTargetCell;
     public static Random random;
     int nNumPaths;
+    ShapeRenderer shape;
 
     @Override
     public void create() {
-        GridSize = (int) (0.00002893518 * (Gdx.graphics.getWidth() * Gdx.graphics.getHeight()));
+        GridSize = 10;
         scrWidth = Gdx.graphics.getWidth();
         scrHeight = Gdx.graphics.getHeight();
         fRows = (int) (scrWidth / GridSize);
         fCols = (int) (scrHeight / GridSize);
         random = new Random();
-        Grid = CreateGrid(fRows, fCols);
+        shape = new ShapeRenderer();
+        Grid = CreateGrid(fRows, fCols, true);
         nNumPaths = 1;
 
         for (int i = 0; i < nNumPaths; i++) {
@@ -75,21 +78,24 @@ public class Main extends ApplicationAdapter {
     public void dispose() {
     }
 
-    public Cell[][] CreateGrid(float fRows, float fCols) {
+    public Cell[][] CreateGrid(float fRows, float fCols, boolean bRandom) {
         Cell[][] Grid;
         Grid = new Cell[(int) fRows][(int) (fCols)];
         for (int x = 0; x < fRows; x++) {
             for (int y = 0; y < fCols; y++) {
-                if (random.nextInt(10) + 1 <= 3) {
-                    Grid[x][y] = new Cell(x * GridSize, y * GridSize, GridSize, true);
+                if (bRandom) {
+                    if (random.nextInt(10) + 1 <= 3) {
+                        Grid[x][y] = new Cell(x * GridSize, y * GridSize, GridSize, true, shape);
+                    } else {
+                        Grid[x][y] = new Cell(x * GridSize, y * GridSize, GridSize, false, shape);
+                    }
                 } else {
-                    Grid[x][y] = new Cell(x * GridSize, y * GridSize, GridSize, false);
+                    if (x % 2 == 0 && y % 2 == 0) {
+                        Grid[x][y] = new Cell(x * GridSize, y * GridSize, GridSize, true, shape);
+                    } else {
+                        Grid[x][y] = new Cell(x * GridSize, y * GridSize, GridSize, false, shape);
+                    }
                 }
-//                if (x % 2 == 0 && y % 2 == 0) {
-//                    Grid[x][y] = new Cell(x * GridSize, y * GridSize, GridSize, true);
-//                } else {
-//                    Grid[x][y] = new Cell(x * GridSize, y * GridSize, GridSize, false);
-//                }
             }
         }
         return Grid;

@@ -18,11 +18,11 @@ public class Cell {
     boolean bStartingCell = false;
     boolean bTarget = false;
 
-    public Cell(float fX, float fY, float fLength, boolean bObstacle) {
+    public Cell(float fX, float fY, float fLength, boolean bObstacle, ShapeRenderer shape) {
         this.fX = fX;
         this.fY = fY;
         this.fLength = fLength;
-        shape = new ShapeRenderer();
+        this.shape = shape;
         this.bObstacle = bObstacle;
         nH = 0;
         nG = 0;
@@ -75,13 +75,6 @@ public class Cell {
         return fY;
     }
 
-    public void setX(float fX) {
-        this.fX = fX;
-    }
-
-    public void setY(float fY) {
-        this.fY = fY;
-    }
 
     public int getnF() {
         return (int) nF;

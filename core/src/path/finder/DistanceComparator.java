@@ -13,8 +13,12 @@ public class DistanceComparator implements Comparator <Cell> {
         f1 = cell1.getnF();
         f2 = cell2.getnF();
         if (f1 > f2) {
+//            System.out.println("1st: " + f1);
+//            System.out.println("2nd: " + f2);
             return 1;
         } else if (f1 < f2) {
+//            System.out.println("1st: " + f2);
+//            System.out.println("2nd: " + f1);
             return -1;
         }
         return 0;
