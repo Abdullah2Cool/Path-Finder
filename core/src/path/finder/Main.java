@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class Main extends ApplicationAdapter {
@@ -13,12 +12,9 @@ public class Main extends ApplicationAdapter {
     float scrWidth, scrHeight;
     public static float fRows, fCols;
     Cell[][] Grid;
-    ArrayList<Cell> arStartingCells = new ArrayList<>();
-    ArrayList<Cell> arTargetCells = new ArrayList<>();
-    ArrayList<PathFinder> arPaths = new ArrayList<>();
     Cell TempStartCell, TempTargetCell;
+    PathFinder path;
     public static Random random;
-    int nNumPaths;
     ShapeRenderer shape;
 
     @Override
@@ -31,33 +27,22 @@ public class Main extends ApplicationAdapter {
         random = new Random();
         shape = new ShapeRenderer();
         Grid = CreateGrid(fRows, fCols, true);
-        nNumPaths = 1;
 
-        for (int i = 0; i < nNumPaths; i++) {
-            while (true) {
-                TempStartCell = Grid[random.nextInt((int) fRows)][random.nextInt((int) fCols)];
-                if (TempStartCell.bObstacle == false) {
-                    TempStartCell.bStartingCell = true;
-                    arStartingCells.add(TempStartCell);
-                    break;
-                }
+        while (true) {
+            TempStartCell = Grid[random.nextInt((int) fRows)][random.nextInt((int) fCols)];
+            if (TempStartCell.bObstacle == false) {
+                TempStartCell.bStartingCell = true;
+                break;
             }
         }
-        for (int i = 0; i < nNumPaths; i++) {
-            while (true) {
-                TempTargetCell = Grid[random.nextInt((int) fRows)][random.nextInt((int) fCols)];
-                if (TempTargetCell.bStartingCell == false && TempTargetCell.bObstacle == false) {
-                    TempTargetCell.bTarget = true;
-                    arTargetCells.add(TempTargetCell);
-                    break;
-                }
+        while (true) {
+            TempTargetCell = Grid[random.nextInt((int) fRows)][random.nextInt((int) fCols)];
+            if (TempTargetCell.bStartingCell == false && TempTargetCell.bObstacle == false) {
+                TempTargetCell.bTarget = true;
+                break;
             }
         }
-
-        for (int i = 0; i < nNumPaths; i++) {
-            PathFinder path = new PathFinder(arTargetCells.get(i), arStartingCells.get(i), Grid, true);
-            arPaths.add(path);
-        }
+        path = new PathFinder(TempTargetCell, TempStartCell, Grid, true);
     }
 
     @Override
@@ -69,13 +54,12 @@ public class Main extends ApplicationAdapter {
                 Grid[i][j].show();
             }
         }
-        for (PathFinder path : arPaths) {
-            path.FindPath();
-        }
+        path.FindPath();
     }
 
     @Override
     public void dispose() {
+        shape.dispose();
     }
 
     public Cell[][] CreateGrid(float fRows, float fCols, boolean bRandom) {
@@ -96,6 +80,7 @@ public class Main extends ApplicationAdapter {
                         Grid[x][y] = new Cell(x * GridSize, y * GridSize, GridSize, false, shape);
                     }
                 }
+//                Grid[x][y] = new Cell(x * GridSize, y * GridSize, GridSize, false, shape);
             }
         }
         return Grid;

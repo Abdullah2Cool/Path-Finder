@@ -60,7 +60,7 @@ public class Cell {
                 shape.end();
             } else {
                 shape.begin(ShapeRenderer.ShapeType.Line);
-                shape.setColor(Color.WHITE);
+                shape.setColor(Color.LIGHT_GRAY);
                 shape.rect(fX, fY, fLength, fLength);
                 shape.end();
             }

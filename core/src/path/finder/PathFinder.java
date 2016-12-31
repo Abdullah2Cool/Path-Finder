@@ -18,23 +18,26 @@ public class PathFinder {
     private ArrayList<Cell> ClosedList = new ArrayList<>();
     private ArrayList<Cell> Path = new ArrayList<>();
     private boolean bPathFound = false;
-    private boolean bNoDiagonals;
-    private int CalculationsPerFrame = 200;
+    private boolean bDiagonals;
+    private int CalPerFrame = 300;
     private boolean bRunOnce = true;
+    private int nPerpendicular, nDiagonal;
 
 
     public PathFinder(Cell TargetCell, Cell StartCell, Cell[][] Grid, boolean bNoDiagonals) {
         this.TargetCell = TargetCell;
         this.StartCell = StartCell;
         this.Grid = Grid;
-        this.bNoDiagonals = bNoDiagonals;
+        this.bDiagonals = bNoDiagonals;
         Calc_Heuristic();
         OpenList.add(StartCell);
+        nPerpendicular = 10;
+        nDiagonal = 14;
     }
 
     public void FindPath() {
         if (!bPathFound) {
-            for (int i = 0; i < CalculationsPerFrame; i++) {
+            for (int i = 0; i < CalPerFrame; i++) {
                 Cell TempCell;
                 Collections.sort(OpenList, new DistanceComparator());
                 if (OpenList.size() > 0) {
@@ -52,10 +55,8 @@ public class PathFinder {
     }
 
     public void HighlightPath() {
-//        Collections.sort(Path, new DistanceComparator()); // arrange the pats in ascending order
-//        Path.get(0).bHighlight = true; // highlight the first cell of the shortest path
         Cell TempCell;
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             TempCell = Path.get(Path.size() - 1);
             if (TempCell != StartCell) {
                 TempCell.bHighlight = true;
@@ -66,25 +67,6 @@ public class PathFinder {
                 break;
             }
         }
-//        for (int f = 0; f < CalculationsPerFrame; f++) {
-//            for (int i = 0; i < OpenList.size(); i++) {
-//                if (OpenList.get(i).bHighlight == true && OpenList.get(i).getParentCell() != StartCell) {
-//                    OpenList.get(i).getParentCell().bHighlight = true;
-//                }
-//            }
-//            for (int i = 0; i < ClosedList.size(); i++) {
-//                if (ClosedList.get(i).bHighlight == true && ClosedList.get(i).getParentCell() != StartCell) {
-//                    ClosedList.get(i).getParentCell().bHighlight = true;
-//                }
-//            }
-//        }
-//        for (int x = 0; x < fRows; x++) {
-//            for (int y = 0; y < fCols; y++) {
-//                if (Grid[x][y].bHighlight == true && Grid[x][y].getParentCell() != StartCell) {
-//                    Grid[x][y].getParentCell().bHighlight = true;
-//                }
-//            }
-//        }
     }
 
     public void Calc_Heuristic() {
@@ -94,9 +76,10 @@ public class PathFinder {
             for (int y = 0; y < fCols; y++) {
                 TempCell = Grid[x][y];
                 if (TempCell.bObstacle == false) {
-                    nHDist = (int) (Math.abs(TempCell.getX() - TargetCell.getX()) / GridSize);
-                    nVDist = (int) (Math.abs(TempCell.getY() - TargetCell.getY()) / GridSize);
-                    TempCell.nH = nHDist + nVDist;
+//                    nHDist = (int) (Math.abs(TempCell.getX() - TargetCell.getX()) / GridSize);
+//                    nVDist = (int) (Math.abs(TempCell.getY() - TargetCell.getY()) / GridSize);
+//                    TempCell.nH = nHDist + nVDist;
+                    TempCell.nH = (int) Math.hypot(TempCell.getX() - TargetCell.getX(), TempCell.getY() - TargetCell.getY());
                 }
             }
         }
@@ -124,7 +107,7 @@ public class PathFinder {
         if (x - 1 >= 0) {
             ChildCells[3] = Grid[x - 1][y]; // left
         }
-        if (!bNoDiagonals) {
+        if (bDiagonals) {
             if (x + 1 < fRows && y + 1 < fCols) {
                 ChildCells[4] = Grid[x + 1][y + 1]; // top-right
             }
@@ -140,15 +123,7 @@ public class PathFinder {
         }
 
         for (int i = 0; i < ChildCells.length; i++) {
-//            if (ChildCells[i].getX() == TargetCell.getX() && ChildCells[i].getY() == TargetCell.getY()) {
             if (ChildCells[i] == TargetCell) {
-                System.out.println("Found");
-                System.out.println(ChildCells[i].getX());
-                System.out.println(ChildCells[i].getY());
-                System.out.println("Target");
-                System.out.println(TargetCell.getX());
-                System.out.println(TargetCell.getY());
-                System.out.println();
                 Path.add(ChildCells[i]);
                 bPathFound = true;
             }
@@ -159,20 +134,20 @@ public class PathFinder {
                         OpenList.add(ChildCells[i]);
                         ChildCells[i].bChecked = true;
                         if (i <= 3) {
-                            ChildCells[i].nG = ParentCell.nG + 10;
+                            ChildCells[i].nG = ParentCell.nG + nPerpendicular;
                         } else {
-                            ChildCells[i].nG = ParentCell.nG + 14;
+                            ChildCells[i].nG = ParentCell.nG + nDiagonal;
                         }
                     } else if (OpenList.contains(ChildCells[i])) {
                         if (i <= 3) {
-                            if (ParentCell.nG + 10 < ChildCells[i].nG) {
+                            if (ParentCell.nG + nPerpendicular < ChildCells[i].nG) {
                                 ChildCells[i].setParentCell(ParentCell);
-                                ChildCells[i].nG = ParentCell.nG + 10;
+                                ChildCells[i].nG = ParentCell.nG + nPerpendicular;
                             }
                         } else {
-                            if (ParentCell.nG + 14 < ChildCells[i].nG) {
+                            if (ParentCell.nG + nDiagonal < ChildCells[i].nG) {
                                 ChildCells[i].setParentCell(ParentCell);
-                                ChildCells[i].nG = ParentCell.nG + 14;
+                                ChildCells[i].nG = ParentCell.nG + nDiagonal;
                             }
                         }
                     }
