@@ -14,25 +14,26 @@ import static path.finder.Main.fRows;
 public class PathFinder {
     private Cell TargetCell, StartCell;
     private Cell[][] Grid;
-    private ArrayList<Cell> OpenList = new ArrayList<>();
-    private ArrayList<Cell> ClosedList = new ArrayList<>();
-    private ArrayList<Cell> Path = new ArrayList<>();
+    private ArrayList<Cell> OpenList = new ArrayList<Cell>();
+    private ArrayList<Cell> ClosedList = new ArrayList<Cell>();
+    private ArrayList<Cell> Path = new ArrayList<Cell>();
     private boolean bPathFound = false;
     private boolean bDiagonals;
-    private int CalPerFrame = 300;
+    private float CalPerFrame = 500 / GridSize;
     private boolean bRunOnce = true;
     private int nPerpendicular, nDiagonal;
 
 
-    public PathFinder(Cell TargetCell, Cell StartCell, Cell[][] Grid, boolean bNoDiagonals) {
+    public PathFinder(Cell TargetCell, Cell StartCell, Cell[][] Grid, boolean bDiagonals) {
         this.TargetCell = TargetCell;
         this.StartCell = StartCell;
         this.Grid = Grid;
-        this.bDiagonals = bNoDiagonals;
+        this.bDiagonals = bDiagonals;
         Calc_Heuristic();
         OpenList.add(StartCell);
         nPerpendicular = 10;
-        nDiagonal = 14;
+        nDiagonal = 10;
+        CalPerFrame = 10;
     }
 
     public void FindPath() {
@@ -68,6 +69,7 @@ public class PathFinder {
             }
         }
     }
+
 
     public void Calc_Heuristic() {
         int nHDist, nVDist;

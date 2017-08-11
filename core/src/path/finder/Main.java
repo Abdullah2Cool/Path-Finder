@@ -2,12 +2,14 @@ package path.finder;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.Random;
 
-public class Main extends ApplicationAdapter {
+public class Main extends ApplicationAdapter implements InputProcessor {
     public static float GridSize;
     float scrWidth, scrHeight;
     public static float fRows, fCols;
@@ -19,6 +21,7 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void create() {
+        Gdx.input.setInputProcessor(this);
         GridSize = 10;
         scrWidth = Gdx.graphics.getWidth();
         scrHeight = Gdx.graphics.getHeight();
@@ -26,6 +29,22 @@ public class Main extends ApplicationAdapter {
         fCols = (int) (scrHeight / GridSize);
         random = new Random();
         shape = new ShapeRenderer();
+        start();
+    }
+
+    @Override
+    public void render() {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        for (int i = 0; i < fRows; i++) {
+            for (int j = 0; j < fCols; j++) {
+                Grid[i][j].show();
+            }
+        }
+        path.FindPath();
+    }
+
+    void start () {
         Grid = CreateGrid(fRows, fCols, true);
 
         while (true) {
@@ -42,19 +61,7 @@ public class Main extends ApplicationAdapter {
                 break;
             }
         }
-        path = new PathFinder(TempTargetCell, TempStartCell, Grid, true);
-    }
-
-    @Override
-    public void render() {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        for (int i = 0; i < fRows; i++) {
-            for (int j = 0; j < fCols; j++) {
-                Grid[i][j].show();
-            }
-        }
-        path.FindPath();
+        path = new PathFinder(TempTargetCell, TempStartCell, Grid, false);
     }
 
     @Override
@@ -84,5 +91,48 @@ public class Main extends ApplicationAdapter {
             }
         }
         return Grid;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        if (keycode == Input.Keys.SPACE) {
+            start();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }

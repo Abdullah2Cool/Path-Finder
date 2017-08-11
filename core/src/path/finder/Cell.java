@@ -36,14 +36,14 @@ public class Cell {
             shape.setColor(Color.WHITE);
             shape.rect(fX, fY, fLength, fLength);
             shape.end();
-        } else if (bObstacle) {
-            shape.begin(ShapeRenderer.ShapeType.Filled);
-            shape.setColor(Color.RED);
-            shape.rect(fX, fY, fLength, fLength);
-            shape.end();
         } else if (bStartingCell) {
             shape.begin(ShapeRenderer.ShapeType.Filled);
             shape.setColor(Color.YELLOW);
+            shape.rect(fX, fY, fLength, fLength);
+            shape.end();
+        } else if (bObstacle) {
+            shape.begin(ShapeRenderer.ShapeType.Filled);
+            shape.setColor(Color.RED);
             shape.rect(fX, fY, fLength, fLength);
             shape.end();
         } else {
@@ -60,7 +60,7 @@ public class Cell {
                 shape.end();
             } else {
                 shape.begin(ShapeRenderer.ShapeType.Line);
-                shape.setColor(Color.LIGHT_GRAY);
+                shape.setColor(Color.SKY);
                 shape.rect(fX, fY, fLength, fLength);
                 shape.end();
             }
